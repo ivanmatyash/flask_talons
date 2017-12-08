@@ -1,6 +1,8 @@
 from app import db
+from app.models.mixins import json_creator
+from sqlalchemy.ext.hybrid import hybrid_property
 
-class User(db.Model):
+class User(json_creator.WithJsonCreate, db.Model):
     __tablename__ = "people"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
@@ -15,5 +17,23 @@ class User(db.Model):
     children = db.relationship("User")
     parent = db.relationship("User", remote_side=[id])
     timetables = db.relationship('Timetable', backref='priem_user', lazy='dynamic')
+
+    @hybrid_property
+    def role_name(self):
+        return self.role.role_name
+
+    def get_properties(self):
+        return [
+            "id",
+            "name",
+            "email",
+            "birthday",
+            "role_id",
+            "role_name",
+            "photo_url",
+            "parent_id",
+        ]
+
+
     def __repr__(self):
         return '<User %r>' % (self.name)
