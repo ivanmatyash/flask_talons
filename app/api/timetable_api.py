@@ -6,6 +6,7 @@ from app import db
 
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/timetable', methods=['GET'])
 def get_timetable():
@@ -21,6 +22,7 @@ def get_record_by_id(record_id):
     return jsonify(record.get_json())
 
 @app.route('/api/timetable', methods=['POST'])
+@login_required
 def create_record():
     if not request.json or not 'doctor_id' in request.json or not 'polyclinic_id' in request.json:
         return jsonify({'Error': 400, "Message" : "Fields doctor_id and polyclinic_id are mandatory!"}), 400
@@ -71,6 +73,7 @@ def create_record():
     return jsonify(record.get_json()), 201
 
 @app.route('/api/timetable/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_record(id):
     record = models.Timetable.query.get(id)
     if record == None:
@@ -81,6 +84,7 @@ def delete_record(id):
     return json
 
 @app.route('/api/timetable/<int:record_id>', methods=['PUT'])
+@login_required
 def update_record(record_id):
     if not request.json or not 'doctor_id' in request.json or not 'polyclinic_id' in request.json:
         return jsonify({'Error': 400, "Message" : "Fields doctor_id and polyclinic_id are mandatory!"}), 400

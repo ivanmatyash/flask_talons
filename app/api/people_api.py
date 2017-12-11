@@ -4,6 +4,7 @@ from app import app
 from app import db
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/people', methods=['GET'])
 def get_people():
@@ -55,6 +56,7 @@ def create_user():
     return jsonify(user.get_json()), 201
 
 @app.route('/api/people/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_user(id):
     user = models.User.query.get(id)
     if user == None:

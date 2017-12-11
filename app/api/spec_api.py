@@ -4,6 +4,7 @@ from app import db
 
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/specialities', methods=['GET'])
 def get_spec():
@@ -19,6 +20,7 @@ def get_spec_by_id(spec_id):
     return jsonify(spec.get_json())
 
 @app.route('/api/specialities', methods=['POST'])
+@login_required
 def create_spec():
     if not request.json:
         return jsonify({'Error': 400, "Message" : "Request must to have JSON."}), 400
@@ -36,6 +38,7 @@ def create_spec():
     return jsonify(spec.get_json()), 201
 
 @app.route('/api/specialities/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_spec(id):
     spec = models.Speciality.query.get(id)
     if spec == None:

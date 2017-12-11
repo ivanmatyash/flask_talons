@@ -3,6 +3,7 @@ from app import app
 from app import db
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/roles', methods=['GET'])
 def get_roles():
@@ -18,6 +19,7 @@ def get_role_by_id(role_id):
     return jsonify(role.get_json())
 
 @app.route('/api/roles', methods=['POST'])
+@login_required
 def create_role():
     if not request.json:
         return jsonify({'Error': 400, "Message" : "Request must to have JSON."}), 400
@@ -35,6 +37,7 @@ def create_role():
     return jsonify(role.get_json()), 201
 
 @app.route('/api/roles/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_role(id):
     role = models.Role.query.get(id)
     if role == None:

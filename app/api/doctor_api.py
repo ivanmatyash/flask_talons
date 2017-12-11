@@ -4,6 +4,7 @@ from app import db
 
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/doctors', methods=['GET'])
 def get_doctors():
@@ -19,6 +20,7 @@ def get_doctor_by_id(doctor_id):
     return jsonify(doctor.get_json())
 
 @app.route('/api/doctors', methods=['POST'])
+@login_required
 def create_doctor():
     if not request.json or not 'speciality_id' in request.json:
         return jsonify({'Error': 400, "Message" : "Field speciality_id is mandatory!"}), 400
@@ -44,6 +46,7 @@ def create_doctor():
     return jsonify(doctor.get_json()), 201
 
 @app.route('/api/doctors/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_doctor(id):
     doctor = models.Doctor.query.get(id)
     if doctor == None:

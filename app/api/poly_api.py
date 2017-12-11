@@ -3,6 +3,7 @@ from app import app
 from app import db
 from flask import jsonify
 from flask import request
+from flask.ext.login import login_required
 
 @app.route('/api/polyclinics', methods=['GET'])
 def get_polys():
@@ -18,6 +19,7 @@ def get_poly_by_id(poly_id):
     return jsonify(poly.get_json())
 
 @app.route('/api/polyclinics', methods=['POST'])
+@login_required
 def create_poly():
     if not request.json:
         return jsonify({'Error': 400, "Message" : "Request must to have JSON."}), 400
@@ -36,6 +38,7 @@ def create_poly():
     return jsonify(poly.get_json()), 201
 
 @app.route('/api/polyclinics/<int:id>', methods = ['DELETE'])
+@login_required
 def delete_poly(id):
     poly = models.Polyclinic.query.get(id)
     if poly == None:
