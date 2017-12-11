@@ -19,7 +19,6 @@ def get_role_by_id(role_id):
     return jsonify(role.get_json())
 
 @app.route('/api/roles', methods=['POST'])
-@login_required
 def create_role():
     if not request.json:
         return jsonify({'Error': 400, "Message" : "Request must to have JSON."}), 400
