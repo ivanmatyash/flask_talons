@@ -1,1 +1,1 @@
-from all_models import *
+from app.models.all_models import *
