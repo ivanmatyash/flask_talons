@@ -36,15 +36,24 @@ class Timetable(json_creator.WithJsonCreate, db.Model):
 
     @hybrid_property
     def patient_name(self):
-        return self.patient.name
+        if self.patient != None:
+            return self.patient.name
+        else:
+            return "Not patient"
 
     @hybrid_property
     def patient_birthday(self):
-        return self.patient.birthday
+        if self.patient != None:
+            return self.patient.birthday
+        else:
+            return "Not birthday"
 
     @hybrid_property
     def patient_photo_url(self):
-        return self.patient.photo_url
+        if self.patient != None:
+            return self.patient.photo_url
+        else:
+            return "http://www.qli.ru/wp-content/uploads/avatarka.jpeg"
 
     @hybrid_property
     def doctor_photo_url(self):
