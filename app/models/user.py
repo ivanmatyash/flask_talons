@@ -1,8 +1,10 @@
 from app import db
 from app.models.mixins import json_creator
 from sqlalchemy.ext.hybrid import hybrid_property
+from flask.ext.login import UserMixin
+from app.login_manager import login_manager
 
-class User(json_creator.WithJsonCreate, db.Model):
+class User(json_creator.WithJsonCreate, db.Model, UserMixin):
     __tablename__ = "people"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
@@ -21,6 +23,10 @@ class User(json_creator.WithJsonCreate, db.Model):
     @hybrid_property
     def role_name(self):
         return self.role.role_name
+
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(userid)
 
     def get_properties(self):
         return [
