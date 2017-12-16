@@ -7,6 +7,7 @@ from app import db
 from flask import jsonify
 from flask import request
 from flask.ext.login import login_required
+from flask.ext.login import current_user
 
 @app.route('/api/timetable', methods=['GET'])
 def get_timetable():
@@ -20,6 +21,34 @@ def get_record_by_id(record_id):
     if record == None:
         return jsonify({"Error" : "404"})
     return jsonify(record.get_json())
+
+@app.route('/api/timetable/update/<int:record_id>', methods=['PUT'])
+@login_required
+def update_talon(record_id):
+    record = models.Timetable.query.get(record_id)
+    if record == None:
+        return jsonify({"Error": "404", "Message:": "Record with this id is not exist."})
+    if record.patient == None:
+        record.patient = current_user
+        db.session.add(record)
+        db.session.commit()
+        return jsonify(record.get_json())
+    else:
+        return jsonify({"Error": "400", "Message:": "Patient at this time is already exist."})
+
+@app.route('/api/timetable/revert/<int:record_id>', methods=['PUT'])
+@login_required
+def revert_talon(record_id):
+    record = models.Timetable.query.get(record_id)
+    if record == None:
+        return jsonify({"Error": "404", "Message:": "Record with this id is not exist."})
+    if record.patient == current_user:
+        record.patient = None
+        db.session.add(record)
+        db.session.commit()
+        return jsonify(record.get_json())
+    else:
+        return jsonify({"Error": "400", "Message:": "This time is free already."})
 
 @app.route('/api/timetable', methods=['POST'])
 @login_required
