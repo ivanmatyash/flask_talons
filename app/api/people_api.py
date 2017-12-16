@@ -29,6 +29,10 @@ def create_user():
         parent = models.User.query.get(int(request.json["parent_id"]))
     else:
         parent = None
+    email = request.json['email']
+    person = models.User.query.filter_by(email=email).first()
+    if person != None:
+        return jsonify({'Error' : 400, 'Message': 'User with this email is already exist!'})
     try:
         user = models.User(email=request.json['email'],
                            password=request.json['password'],
