@@ -35,6 +35,13 @@ def logout():
 def get_current_user():
     return jsonify(current_user.get_json())
 
+@app.route("/api/user/my_talons", methods=["GET"])
+@login_required
+def get_my_talons():
+    talons = models.Timetable.query.filter_by(patient=current_user).all()
+    dict_list = [item.get_json() for item in talons]
+    return jsonify(dict_list)
+
 @app.errorhandler(401)
 def unauth(e):
     return jsonify({'Error': 401, "Message": "Unauthorized."}), 400
