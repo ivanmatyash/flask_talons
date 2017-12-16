@@ -22,14 +22,9 @@ def get_user_by_id(user_id):
 @app.route('/api/people', methods=['POST'])
 def create_user():
     if not request.json or not 'email' in request.json\
-            or not 'password' in request.json or not "role_id" in request.json:
-        return jsonify({'Error': 400, "Message" : "Fields password, role_id and email are mandatory!"}), 400
-    try:
-        role = models.Role.query.get(int(request.json['role_id']))
-    except ValueError:
-        role = models.Role.query.first()
-    if role == None:
-        role = models.Role.query.first()
+            or not 'password' in request.json:
+        return jsonify({'Error': 400, "Message" : "Fields password and email are mandatory!"}), 400
+
     if "parent_id" in request.json:
         parent = models.User.query.get(int(request.json["parent_id"]))
     else:
@@ -39,8 +34,6 @@ def create_user():
                            password=request.json['password'],
                            name=request.json.get('name', "Anonym"),
                            birthday=datetime.datetime.strptime(request.json.get('birthday', "25-10-1900"), '%d-%m-%Y'),
-                           role=role,
-                           role_id = role.id,
                            parent_id=request.json.get("parent_id", -1),
                            parent=parent,
                            photo_url = request.json.get("photo_url", "https://www.b17.ru/foto/uploaded/b69a564c47110acefb8c986f768210ac.jpg")

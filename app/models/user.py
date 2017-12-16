@@ -11,18 +11,11 @@ class User(json_creator.WithJsonCreate, db.Model, UserMixin):
     password = db.Column(db.String(120), index=True, unique=False, nullable=False)
     name = db.Column(db.String(120), index=True, unique=False)
     birthday = db.Column(db.Date)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
-    role = db.relationship("Role")
     photo_url = db.Column(db.String(120))
-
     parent_id = db.Column(db.Integer, db.ForeignKey('people.id'))
     children = db.relationship("User")
     parent = db.relationship("User", remote_side=[id])
     timetables = db.relationship('Timetable', backref='priem_user', lazy='dynamic')
-
-    @hybrid_property
-    def role_name(self):
-        return self.role.role_name
 
     @login_manager.user_loader
     def load_user(userid):
@@ -34,8 +27,6 @@ class User(json_creator.WithJsonCreate, db.Model, UserMixin):
             "name",
             "email",
             "birthday",
-            "role_id",
-            "role_name",
             "photo_url",
             "parent_id",
         ]
