@@ -14,7 +14,7 @@ def get_timetable_week():
 
 @app.route('/api/week_timetable/<int:spec_id>', methods=['GET'])
 def get_records_by_speciality(spec_id):
-    records = db.session.query(models.WeekTimetable).filter(models.Doctor.speciality_id==spec_id).all()
+    records = models.WeekTimetable.query.join(models.WeekTimetable.doctor, aliased=True).filter_by(speciality_id=spec_id).all()
     dict_list = [item.get_json() for item in records]
     return jsonify(dict_list)
 
