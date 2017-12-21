@@ -25,6 +25,9 @@ class Timetable(json_creator.WithJsonCreate, db.Model):
     @hybrid_property
     def doctor_speciality(self):
         return self.doctor.speciality_name
+    @hybrid_property
+    def doctor_speciality_id(self):
+        return self.doctor.speciality_id
 
     @hybrid_property
     def polyclinic_number(self):
@@ -65,6 +68,7 @@ class Timetable(json_creator.WithJsonCreate, db.Model):
             "doctor_id",
             "doctor_name",
             "doctor_speciality",
+            "doctor_speciality_id",
             "polyclinic_id",
             "polyclinic_number",
             "polyclinic_address",
