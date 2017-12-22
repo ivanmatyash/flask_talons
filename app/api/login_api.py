@@ -44,4 +44,4 @@ def get_my_talons():
 
 @app.errorhandler(401)
 def unauth(e):
-    return jsonify({'Error': 401, "Message": "Unauthorized."}), 400
+    return jsonify({'Error': 401, "Message": "Unauthorized."}), 200
