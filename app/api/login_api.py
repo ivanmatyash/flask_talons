@@ -33,7 +33,7 @@ def logout():
 @app.route("/api/user/current_user", methods=["GET"])
 @login_required
 def get_current_user():
-    return jsonify(current_user.get_json())
+    return jsonify(current_user.get_json()), 200
 
 @app.route("/api/user/my_talons", methods=["GET"])
 @login_required
